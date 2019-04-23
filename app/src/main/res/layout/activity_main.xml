@@ -15,5 +15,18 @@
         android:text="指纹"
         android:id="@+id/fm"/>
 
+    <Button
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="签名"
+        android:id="@+id/sign"/>
+
+    <Button
+        android:onClick="onClick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="验证"
+        android:id="@+id/verify"/>
 
 </LinearLayout>

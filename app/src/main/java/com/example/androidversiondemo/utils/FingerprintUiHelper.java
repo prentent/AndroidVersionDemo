@@ -6,6 +6,10 @@ import android.support.v4.os.CancellationSignal;
 
 import javax.crypto.Cipher;
 
+/*
+指纹识别类
+ */
+
 public class FingerprintUiHelper {
     private FingerprintManagerCompat fingerprintManager;
     private Callback callback;

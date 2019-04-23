@@ -17,6 +17,9 @@ import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
+/*
+ Cipher设置类
+ */
 public class CipherHelper {
 
     private static final String KEY_NAME_NOT_INVALIDATED = "key_not_invalidated";

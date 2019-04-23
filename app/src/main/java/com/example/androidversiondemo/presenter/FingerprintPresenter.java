@@ -6,8 +6,10 @@ import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 
 import com.example.androidversiondemo.utils.CipherHelper;
 import com.example.androidversiondemo.utils.FingerprintUiHelper;
-import com.example.androidversiondemo.utils.LogUtils;
 
+/*
+指纹识别
+ */
 public class FingerprintPresenter {
 
     private final KeyguardManager keyguardManager;
