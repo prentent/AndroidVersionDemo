@@ -15,20 +15,10 @@ import android.support.v4.content.ContextCompat;
  */
 
 public class RuntimePermissions {
-    private RuntimePermissions() {
-    }
-
-    private static class PermissionsHolder {
-        private static RuntimePermissions permissions = new RuntimePermissions();
-    }
-
-    public static RuntimePermissions getInstance() {
-        return PermissionsHolder.permissions;
-    }
 
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 
-    public <T> boolean hasPermission(T context, String[] str2) {
+    public static <T> boolean hasPermission(T context, String[] str2) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (context instanceof Activity) {
                 if (ActivityCompat.checkSelfPermission((Activity) context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
@@ -48,7 +38,7 @@ public class RuntimePermissions {
         return true;
     }
 
-    public <T> void requestPermissions(T context, String[] str2) {
+    public static <T> void requestPermissions(T context, String[] str2) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //                if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             //如果未授予权限，提示
@@ -67,7 +57,7 @@ public class RuntimePermissions {
         }
     }
 
-    public boolean onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public static boolean onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length < 1) {
                 return false;
