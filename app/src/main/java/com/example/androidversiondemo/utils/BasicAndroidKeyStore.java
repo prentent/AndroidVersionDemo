@@ -216,6 +216,9 @@ public class BasicAndroidKeyStore {
         // 这个类实际上并不表示签名，只是使用指定的算法创建/验证签名的引擎。
         Signature s = Signature.getInstance(SIGNATURE_SHA256withRSA);
 
+        //公钥私钥
+/*        LogUtils.e(this,  ((KeyStore.PrivateKeyEntry) entry).getCertificate().getPublicKey().getAlgorithm()+"");
+        LogUtils.e(this,  ((KeyStore.PrivateKeyEntry) entry).getPrivateKey().getAlgorithm()+"");*/
         // BEGIN_INCLUDE(verify_data)
         // 验证数据。
         s.initVerify(((KeyStore.PrivateKeyEntry) entry).getCertificate());

@@ -11,12 +11,15 @@ import com.example.androidversiondemo.utils.LogUtils;
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SignatureException;
 import java.security.UnrecoverableEntryException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.util.Enumeration;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +34,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         keyStore = new BasicAndroidKeyStore();
-        keyStore.setAlias("keylh");
+        keyStore.setAlias("mykey");
+
         try {
             keyStore.createKeys(this);
         } catch (NoSuchProviderException | NoSuchAlgorithmException | InvalidAlgorithmParameterException e) {
@@ -82,6 +86,25 @@ public class MainActivity extends AppCompatActivity {
                 } catch (InvalidKeyException e) {
                     e.printStackTrace();
                 } catch (SignatureException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.all:
+                try {
+                    KeyStore androidKeyStore = KeyStore.getInstance("AndroidKeyStore");
+                    androidKeyStore.load(null);
+                    Enumeration<String> aliases = androidKeyStore.aliases();
+                    LogUtils.e(this,aliases+"");
+                    while (aliases.hasMoreElements()) {
+                        LogUtils.e(this, aliases.nextElement());
+                    }
+                } catch (KeyStoreException e) {
+                    e.printStackTrace();
+                } catch (CertificateException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
                 break;
