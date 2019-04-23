@@ -18,6 +18,7 @@ public class RuntimePermissions {
 
     private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 1;
 
+    //检测是否有权限
     public static <T> boolean hasPermission(T context, String[] str2) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (context instanceof Activity) {
@@ -38,6 +39,7 @@ public class RuntimePermissions {
         return true;
     }
 
+    //申请权限
     public static <T> void requestPermissions(T context, String[] str2) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //                if (ActivityCompat.shouldShowRequestPermissionRationale(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -57,6 +59,7 @@ public class RuntimePermissions {
         }
     }
 
+    //回调
     public static boolean onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE) {
             if (grantResults.length < 1) {

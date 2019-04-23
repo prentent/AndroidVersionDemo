@@ -1,12 +1,11 @@
 package com.example.androidversiondemo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.example.androidversiondemo.utils.RuntimePermissions;
-
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
 
     private View mLayout;
 
@@ -15,7 +14,13 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
     }
 
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.fm:
+                startActivity(new Intent(this, FingerprintManagerActivity.class));
+                break;
+        }
+    }
 }
