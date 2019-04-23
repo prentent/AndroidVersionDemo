@@ -25,24 +25,33 @@ public class CipherHelper {
 
     private KeyStore keyStore;
     private Cipher cipher;
-    private KeyGenerator keyGenerator;
+
 
     public CipherHelper() {
         try {
-            keyStore = KeyStore.getInstance(DEFAULT_PROVIDER);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            initKeyStore();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//6.0
                 cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" +
                         KeyProperties.BLOCK_MODE_CBC + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
-                keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, DEFAULT_PROVIDER);
+                //创建密钥
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
+                    createKey(KEY_NAME_NOT_INVALIDATED, false);
+                } else {
+                    createKey(DEFAULT_KEY_NAME, true);
+                }
             }
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | NoSuchProviderException | KeyStoreException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
             e.printStackTrace();
         }
+    }
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.N) {
-            createKey(KEY_NAME_NOT_INVALIDATED, true);
-        } else {
-            createKey(DEFAULT_KEY_NAME, true);
+    //初始化KeyStore
+    private void initKeyStore() {
+        try {
+            keyStore = KeyStore.getInstance(DEFAULT_PROVIDER);
+            keyStore.load(null);
+        } catch (IOException | NoSuchAlgorithmException | CertificateException | KeyStoreException e) {
+            e.printStackTrace();
         }
     }
 
@@ -52,6 +61,7 @@ public class CipherHelper {
         try {
             keyStore.load(null);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, DEFAULT_PROVIDER);
                 KeyGenParameterSpec.Builder builder = new KeyGenParameterSpec.Builder(keyName, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
                         .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
                         // 要求用户使用指纹进行身份验证，以授权每次使用密钥
@@ -63,9 +73,8 @@ public class CipherHelper {
                 keyGenerator.init(builder.build());
                 keyGenerator.generateKey();
             }
-        } catch (IOException | NoSuchAlgorithmException | CertificateException e) {
-            e.printStackTrace();
-        } catch (InvalidAlgorithmParameterException e) {
+        } catch (NoSuchProviderException | NoSuchAlgorithmException | InvalidAlgorithmParameterException |
+                CertificateException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -87,7 +96,7 @@ public class CipherHelper {
         return false;
     }
 
-    public Cipher getCipher(){
+    public Cipher getCipher() {
         return cipher;
     }
 }

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.androidversiondemo.presenter.FingerprintPresenter;
 import com.example.androidversiondemo.utils.CipherHelper;
 import com.example.androidversiondemo.utils.FingerprintUiHelper;
 import com.example.androidversiondemo.utils.LogUtils;
@@ -45,9 +46,8 @@ public class FingerprintManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fingerprint_manager);
         View mLayout = findViewById(R.id.sample_main_fragment);
         test_fm = (TextView) findViewById(R.id.test_fm);
-        Log.e("=====","dsada");
-        CipherHelper cipherHelper = new CipherHelper();
-        FingerprintUiHelper fingerprintUiHelper = new FingerprintUiHelper(this, new FingerprintUiHelper.Callback() {
+
+        FingerprintPresenter mPresenter = new FingerprintPresenter(this, new FingerprintPresenter.CallbackPressenter() {
             // 当出现错误的时候回调此函数，比如多次尝试都失败了的时候，errString是错误信息
             @Override
             public void onAuthenticationError(int errMsgId, CharSequence errString) {
@@ -75,29 +75,25 @@ public class FingerprintManagerActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.btn_qxfm).setOnClickListener(v -> fingerprintUiHelper.stopListening());
-        findViewById(R.id.btn_fm).setOnClickListener(v -> {
-            if (cipherHelper.initCipher()) {
-                Snackbar.make(mLayout, "打开指纹", Snackbar.LENGTH_SHORT).show();
-                fingerprintUiHelper.startListening(cipherHelper.getCipher());
-            } else {
-                Snackbar.make(mLayout, "未能打开指纹", Snackbar.LENGTH_SHORT).show();
-            }
-        });
-
-
-        //获取锁定和解锁键盘锁的类。
-        KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Context.KEYGUARD_SERVICE);
-
         //检测是否设置了指纹锁。(最小版本支持16)
-        if (!keyguardManager.isKeyguardSecure()) {
+        if (!mPresenter.isKeyguardSecure()) {
             Snackbar.make(mLayout, "安全锁屏还没有设置指纹", Snackbar.LENGTH_SHORT).show();
             return;
         }
 
-        if (!fingerprintUiHelper.isFingerprintAuthAvailable()) {
+        if (!mPresenter.isFingerprintAuthAvailable()) {
             Snackbar.make(mLayout, "进入“设置->安全->指纹”，并注册至少一个指纹", Snackbar.LENGTH_SHORT).show();
             return;
         }
+
+        findViewById(R.id.btn_qxfm).setOnClickListener(v -> mPresenter.stopListening());
+        findViewById(R.id.btn_fm).setOnClickListener(v -> {
+            if (mPresenter.initCipher()) {
+                Snackbar.make(mLayout, "打开指纹", Snackbar.LENGTH_SHORT).show();
+                mPresenter.startListening();
+            } else {
+                Snackbar.make(mLayout, "未能打开指纹", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 }
