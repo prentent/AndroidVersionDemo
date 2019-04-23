@@ -12,6 +12,7 @@ import android.support.v4.hardware.fingerprint.FingerprintManagerCompat;
 import android.support.v4.os.CancellationSignal;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -44,7 +45,7 @@ public class FingerprintManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fingerprint_manager);
         View mLayout = findViewById(R.id.sample_main_fragment);
         test_fm = (TextView) findViewById(R.id.test_fm);
-
+        Log.e("=====","dsada");
         CipherHelper cipherHelper = new CipherHelper();
         FingerprintUiHelper fingerprintUiHelper = new FingerprintUiHelper(this, new FingerprintUiHelper.Callback() {
             // 当出现错误的时候回调此函数，比如多次尝试都失败了的时候，errString是错误信息
