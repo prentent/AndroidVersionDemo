@@ -70,9 +70,10 @@ public class CipherHelper {
                         // 要求用户使用指纹进行身份验证，以授权每次使用密钥
                         .setUserAuthenticationRequired(true)
                         .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+              /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     builder.setInvalidatedByBiometricEnrollment(invalidatedByBiometricEnrollment);
                 }
+*/
                 keyGenerator.init(builder.build());
                 keyGenerator.generateKey();
             }

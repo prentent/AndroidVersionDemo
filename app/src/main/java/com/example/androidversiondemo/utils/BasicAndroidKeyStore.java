@@ -25,10 +25,15 @@ import java.security.spec.AlgorithmParameterSpec;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import javax.security.auth.x500.X500Principal;
 
 /*
-KeyStore签名
+KeyStore签名测试
  */
 public class BasicAndroidKeyStore {
 
@@ -108,6 +113,7 @@ public class BasicAndroidKeyStore {
     }
 
     /**
+     * Signature 加密
      * 使用Android密钥存储库中存储的密钥对对数据进行签名。此签名可以与稍后的数据一起使用，以验证它是由该应用程序签名的。
      *
      * @return生成的数据签名的字符串编码
@@ -135,7 +141,6 @@ public class BasicAndroidKeyStore {
             LogUtils.e(this, "Exiting signData()...");
             return null;
         }
-
         /* 如果条目不是密钥存储库。PrivateKeyEntry可能存储在使
         用其他机制的应用程序的前viou迭代中，或者被使用相同别名的
         相同密钥存储库的其他东西覆盖。您可以使用entry.getClass()确定类型，然后从那里进行调试。
@@ -164,6 +169,7 @@ public class BasicAndroidKeyStore {
     }
 
     /**
+     * Signature 验证
      * 给定一些数据和签名，使用Android密钥存储库中存储的密钥对来验证数据是由该应用程序使用该密钥对签名的。
      *
      * @param input        需要验证的数据。
@@ -175,8 +181,6 @@ public class BasicAndroidKeyStore {
             UnrecoverableEntryException, InvalidKeyException, SignatureException {
         byte[] data = input.getBytes();
         byte[] signature;
-        // BEGIN_INCLUDE(decode_signature)
-
         // 确保签名字符串存在。如果没有，就退出，什么也做不了。
 
         if (signatureStr == null) {
@@ -192,7 +196,6 @@ public class BasicAndroidKeyStore {
             // signatureStr不是null，但可能没有正确编码。它不是一个有效的Base64字符串。
             return false;
         }
-        // END_INCLUDE(decode_signature)
 
         KeyStore ks = KeyStore.getInstance(KEYSTORE_PROVIDER_ANDROID_KEYSTORE);
 
@@ -217,15 +220,12 @@ public class BasicAndroidKeyStore {
         Signature s = Signature.getInstance(SIGNATURE_SHA256withRSA);
 
         //公钥私钥
-/*        LogUtils.e(this,  ((KeyStore.PrivateKeyEntry) entry).getCertificate().getPublicKey().getAlgorithm()+"");
-        LogUtils.e(this,  ((KeyStore.PrivateKeyEntry) entry).getPrivateKey().getAlgorithm()+"");*/
-        // BEGIN_INCLUDE(verify_data)
         // 验证数据。
         s.initVerify(((KeyStore.PrivateKeyEntry) entry).getCertificate());
         s.update(data);
         return s.verify(signature);
-        // END_INCLUDE(verify_data)
     }
+
 
     public void setAlias(String alias) {
         mAlias = alias;
